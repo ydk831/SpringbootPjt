@@ -24,7 +24,7 @@ public class TransferCalculateController {
         @RequestParam Double amount
     ) {
         
-        return TransferCalculateResponseView.of(transfercalculateService.calculate(fromMarket, toMarket, amount));
-        //return new TransferCalculateResponseView("BTC", 123.456, Map.of(123D, 123D), Map.of(123D,123D));
+        // return TransferCalculateResponseView.of(transfercalculateService.calculate(fromMarket, toMarket, amount));        
+        return new TransferCalculateResponseView("BTC", 123.456, Map.of(123D, 456D), Map.of(123D,456D));
     }
 }

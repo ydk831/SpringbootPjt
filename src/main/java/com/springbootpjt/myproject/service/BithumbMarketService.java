@@ -7,35 +7,34 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import com.springbootpjt.myproject.feign.UpbitFeignClient;
+import com.springbootpjt.myproject.feign.BithumbFeignClient;
 
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-//@Qualifier("upbit")
-public class UpbitMarketservice implements MarketService{
+//@Qualifier("bithum")
+public class BithumbMarketService implements MarketService {
+
     // @Autowired
-    // UpbitFeignClient upbitFeginClient;
-    final UpbitFeignClient upbitFeginClient;
+    // BithumFeignClient bithumFeignClient;
+    final BithumbFeignClient bithumbFeignClient;
     
     @Override
     public Double getCoinCurrentPrice(String coin) {
-        return upbitFeginClient.getCoinPrice("KRW-" + coin.toUpperCase())
-                .get(0)
-                .getTrade_price();
+        return Double.parseDouble(bithumbFeignClient.getCoinPrice(coin.toUpperCase()+"_KRW")
+                .getData()
+                .getClosing_price());
     }
 
     @Override
     public List<String> getCoins() {
         List<String> result = new ArrayList<>();
-        upbitFeginClient.getMarketCode().forEach(k -> {
-            if(k.getMarket().startsWith("KRW"))  {
-                result.add(k.getMarket().substring(4).toUpperCase());                
+        bithumbFeignClient.getAssetStatus().getData().forEach((k,v) -> {
+            if(v.getDeposit_status() == 1 && v.getWithdrawal_status() == 1) {
+                result.add(k.toUpperCase());
             }
         });
-
         return result;
     }
-    
 }
