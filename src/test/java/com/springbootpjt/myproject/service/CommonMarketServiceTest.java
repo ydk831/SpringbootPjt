@@ -3,6 +3,7 @@ package com.springbootpjt.myproject.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -18,13 +19,18 @@ public class CommonMarketServiceTest {
     
     @Mock
     BithumbMarketService bithumbMarketService;
+    @Mock
+    UpbitMarketservice upbitMarketService;
 
     // CommonMarketService commonMarketService = new CommonMarketService(Map.of("bithumbMarketService",bithumbMarketService));
     CommonMarketService commonMarketService;
 
     @BeforeEach
     void setUp() {
-        commonMarketService = new CommonMarketService(Map.of("bithumbMarketService",bithumbMarketService));
+        commonMarketService = new CommonMarketService(
+            Map.of("bithumbMarketService",bithumbMarketService,
+                    "upbitMarketService",upbitMarketService)
+            );
     }
 
     @Test
@@ -34,7 +40,21 @@ public class CommonMarketServiceTest {
 
     @Test
     void getMarketServiceTests() {
+        // given
+        Map<String, MarketService> marketServices = new HashMap<>();
+        marketServices.put("bithumbMarketService", bithumbMarketService);
+        marketServices.put("upbitMarketService", upbitMarketService);
 
+        // when & then 
+        // assertEquals(bithumbMarketService, CommonMarketService.getMarketService(marketServices,"bithumb"));
+        // assertEquals(bithumbMarketService, CommonMarketService.getMarketService(marketServices,"Bithumb"));
+        // assertEquals(bithumbMarketService, CommonMarketService.getMarketService(marketServices,"bITHUMb"));
+        // assertEquals(bithumbMarketService, CommonMarketService.getMarketService(marketServices,"bithumB"));
+
+        assertEquals(upbitMarketService, CommonMarketService.getMarketService(marketServices,"upbit"));
+        assertEquals(upbitMarketService, CommonMarketService.getMarketService(marketServices,"Upbit"));
+        assertEquals(upbitMarketService, CommonMarketService.getMarketService(marketServices,"upbiT"));
+        assertEquals(upbitMarketService, CommonMarketService.getMarketService(marketServices,"UPBIT"));
     }
 
     @Test
